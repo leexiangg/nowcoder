@@ -1,4 +1,4 @@
-package com.limouren;
+package com.limouren.company;
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -16,6 +16,7 @@ import java.util.Scanner;
  * 小易喜欢"A","ABA"和"ABCBA"这些单词
  * 给你一个单词，你要回答小易是否会喜欢这个单词（只要不是不喜欢，就是喜欢）。
  * https://www.nowcoder.com/practice/ca7b8af83e2f4ec1af2f23d6733223b5?tpId=182&&tqId=34295&rp=1&ru=/ta/exam-all&qru=/ta/exam-all/question-ranking
+ * 难度：***
  */
 public class Q21_NeteaseLikeWord {
     public static void main(String[] args) {

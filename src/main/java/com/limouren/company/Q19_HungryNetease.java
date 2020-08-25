@@ -1,4 +1,4 @@
-package com.limouren;
+package com.limouren.company;
 
 import java.math.BigInteger;
 import java.util.Scanner;

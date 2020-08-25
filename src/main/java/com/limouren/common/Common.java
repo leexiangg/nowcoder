@@ -1,4 +1,4 @@
-package com.limouren;
+package com.limouren.common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
