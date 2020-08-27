@@ -17,6 +17,7 @@ import java.util.*;
  * 做取出队头的值操作的时候，并不弹出当前队头。
  * 小明同学发现，这段程序恰好按顺序输出了1,2,3,...,n。现在小明想让你构造出原始的队列，你能做到吗？[注：原题样例第三行5有错，应该为3，以下已修正]
  * https://www.nowcoder.com/practice/657d09e2b3704574814089ba8566d98d?tpId=182&&tqId=34299&rp=1&ru=/ta/exam-all&qru=/ta/exam-all/question-ranking
+ * 难度：*
  */
 public class Q25_ConstructQueue {
     public static void main(String[] args) {
