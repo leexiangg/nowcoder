@@ -253,8 +253,56 @@ public class Common {
         return ret;
     }
 
+    /**
+     * 打印一个数的 3 进制
+     * @param n 数
+     * @param l 格式化长度，0为前端不补零，如果实际转换后超过l，以实际转换结果为准
+     * @return 0t12012012
+     */
+    public static String ternary(long n, int l) {
+        StringBuilder sb = new StringBuilder();
+        do {
+            sb.insert(0, n % 3);
+        } while((n /= 3) > 0);
+        while(sb.length() < l)
+            sb.insert(0, '0');
+        return sb.insert(0, "0t").toString();
+    }
+
+    /**
+     * 除了 1 和 M 的所有约数
+     * @return
+     */
+    public static List<Integer> commonDivisor(int M) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 2; i <= Math.sqrt(M); i++) {
+            double tmp = (double) M / i;
+            if (tmp % 1 == 0) {
+                list.add((int) tmp);
+                list.add(i);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 所有约数
+     * @return
+     */
+    public static List<Integer> commonDivisorAll(int M) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 1; i <= Math.sqrt(M); i++) {
+            double tmp = (double) M / i;
+            if (tmp % 1 == 0) {
+                list.add((int) tmp);
+                list.add(i);
+            }
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
-        printArray(combination(new int[]{1,2,3}));
+        System.out.println(Arrays.deepToString(rank(new int[]{0, 1, 2, 3})));
     }
 
 }
