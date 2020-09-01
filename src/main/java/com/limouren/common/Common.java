@@ -48,7 +48,7 @@ public class Common {
      * @param array
      */
     public static void printArray(int[] array) {
-        Arrays.stream(array).forEach(t -> System.out.print(t + "  "));
+        Arrays.stream(array).forEach(t -> System.out.print(t + " "));
         System.out.println();
     }
 
@@ -203,6 +203,39 @@ public class Common {
     }
 
     /**
+     * 从不重复的数组 a 中找 n 个数的组合
+     * @param a
+     * @param n
+     * @return
+     */
+    public static int[][] combination(int[] a, int n) {
+        int[][] ret = new int[C(a.length, n)][n];
+        int index = 0;
+        // 如果 n 只有 1 ，则把 a 队列铺平返回
+        if(n == 1) {
+            for (int i = 0; i < a.length; i++) {
+                ret[i][0] = a[i];
+            }
+            return ret;
+        }
+        // 从剩下的里面取一个
+        for (int i = 0; i < a.length; i++) {
+            int[] combination = new int[a.length - i - 1];
+            System.arraycopy(a, i + 1, combination, 0, a.length - i - 1);
+            // 把这个后面的继续做组合
+            int[][] tmp = combination(combination, n - 1);
+            // 把取出来的这一个合并到所有组合的开头
+            for (int j = 0; j < tmp.length; j++) {
+                int[] inner = new int[tmp[j].length + 1];
+                inner[0] = a[i];
+                System.arraycopy(tmp[j], 0, inner, 1, tmp[j].length);
+                ret[index ++] = inner;
+            }
+        }
+        return ret;
+    }
+
+    /**
      *         do {
      *             ret[index ++] = array;
      *         } while(nextPermutation(array));
@@ -302,7 +335,7 @@ public class Common {
     }
 
     public static void main(String[] args) {
-        System.out.println(Arrays.deepToString(rank(new int[]{0, 1, 2, 3})));
+        System.out.println(Arrays.deepToString(combination(new int[]{0, 1, 2, 3}, 2)));
     }
 
 }

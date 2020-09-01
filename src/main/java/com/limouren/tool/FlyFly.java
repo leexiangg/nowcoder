@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.*;
 
+/**
+ * 白银行情实时了解
+ */
 public class FlyFly extends JFrame {
 
     private static final long serialVersionUID = 1L;

@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
  * A - B, B - C, A + B, B + C. 这四个数值.每个字母代表每个人所拥有的糖果数.
  * 现在需要通过这四个数值计算出每个人手里有多少个糖果,即A,B,C。这里保证最多只有一组整数A,B,C满足所有题设条件。
  * https://www.nowcoder.com/practice/02d8d42b197646a5bbd0a98785bb3a34?tpId=182&&tqId=34307&rp=1&ru=/ta/exam-all&qru=/ta/exam-all/question-ranking
+ * 难度：*
  */
 public class Q33_Candy {
     public static void main(String[] args) throws IOException {
