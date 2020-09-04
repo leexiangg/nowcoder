@@ -1,5 +1,6 @@
 package com.limouren.tool;
 
+import com.limouren.common.HttpProxy;
 import com.limouren.common.HttpsClientUtil;
 
 import javax.swing.*;
@@ -48,9 +49,20 @@ public class SayZhang extends JFrame {
                 Map<String, String> header = new HashMap<>();
                 header.put("Referer", "https://mingjia.cngold.org/expert/1868756/sayIndex.htm");
                 https.setBaseheader(header);
-                String result = https.doGet(url + new Date().getTime(), false);
+                // 设置代理
+                String result = null;
+                do {
+                    String ipPort = HttpProxy.getRandom();
+                    String[] proxyIpPort = ipPort.split(":");
+                    https.setProxy(true, proxyIpPort[0], Integer.parseInt(proxyIpPort[1]));
+                    result = https.doGet(url + new Date().getTime(), false);
+//                        HttpProxy.rmProxy(ipPort);
+//                    else
+//                        break;
+                } while (result == null || result.length() <= 0);
                 result = result.substring(result.indexOf("\"content\":\"") + 11);
                 result = result.substring(0, result.indexOf("\",\"pictures\":"));
+                System.out.println(result);
                 if(!result.equals(top)) {
                     if(result.indexOf("做多") > 0) {
                         jltd.setForeground(Color.RED);
@@ -66,8 +78,8 @@ public class SayZhang extends JFrame {
                     jltd.setForeground(Color.BLACK);
                 }
                 jltd.setText(result);
-                Thread.sleep(60000);
-            } catch (InterruptedException e) {
+                Thread.sleep(180000);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

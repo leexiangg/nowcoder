@@ -19,6 +19,8 @@ public class FlyFly extends JFrame {
     private JLabel jlx = new JLabel();
     private int width, height;
     private int mark;
+    private double hisRate = 6.8375;
+    private long hisRateTime = 0;
 
     public FlyFly(int w, int h) {
         this.setSize(w, h);
@@ -48,31 +50,41 @@ public class FlyFly extends JFrame {
         this.setText();
     }
 
+    /**
+     * 设置文字
+     */
     public void setText() {
-        String url = "https://api.jijinhao.com/realtime/quotejs.htm?codes=JO_9754%2CJO_92232&currentPage=1&pageSize=2&_=";
         while(true) {
-            HttpsClientUtil https = new HttpsClientUtil();
             try {
-                Map<String, String> header = new HashMap<>();
-                header.put("Referer", "https://www.cngold.org/img_date/livesilvercn_rmb.html");
-                https.setBaseheader(header);
-                String result = https.doGet(url + new Date().getTime(), false);
-                parseResponse(result).forEach(t -> {
-                    if("AgT+D".equals(t.getQ68())) {
-                        setJLable(t, jltd);
+                // 获取行情
+                getQuot().forEach(t -> {
+                    if ("AgT+D".equals(t.getQ68())) {
+                        // 设置整体控件根据行情波动上下浮动
                         this.setLocation(width, Math.max(0, height + (mark - Integer.parseInt(t.getQ70())) * 50));
                         mark = Integer.parseInt(t.getQ70());
+                        setJLable(t, jltd);
                     } else {
+                        // 根据实时汇率换算 美元/盎司 成为 元/kg，31.1034768
+                        double q63 = Double.parseDouble(t.getQ63()); // 现价
+                        double q70 = Double.parseDouble(t.getQ70()); // 涨跌幅度
+                        double rate = getRate();
+                        t.setQ63("" + Double.valueOf(q63 / 31.1034768 * rate * 1000).intValue());
+                        t.setQ70("" + Double.valueOf(q70 / 31.1034768 * rate * 1000).intValue());
                         setJLable(t, jlx);
                     }
                 });
                 Thread.sleep(10000);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * 根据涨跌设置文字颜色
+     * @param t
+     * @param jLabel
+     */
     private void setJLable(Quot t, JLabel jLabel) {
         double q70 = Double.parseDouble(t.getQ70());
         if (q70 > 0) {
@@ -85,9 +97,48 @@ public class FlyFly extends JFrame {
         jLabel.setText(t.toString());
     }
 
-    public List<Quot> parseResponse(String str) {
+    /**
+     * 获取汇率
+     * 一个小时获取一次
+     * http://www.webmasterhome.cn/huilv/USD/USDCNY/
+     * @return
+     */
+    private double getRate() {
+        if(new Date().getTime() - hisRateTime > 3600000) {
+            try {
+                String url = "http://www.webmasterhome.cn/huilv/USD/USDCNY/";
+                HttpsClientUtil https = new HttpsClientUtil();
+                Map<String, String> header = new HashMap<>();
+                header.put("Referer", "http://www.webmasterhome.cn/");
+                https.setBaseheader(header);
+                String str = https.doGet(url, false);
+                System.out.println(str);
+                // <span class="mexl">6.8375</span>
+                int startIndex = str.indexOf("<span class=\"mexl\">") + 19;
+                int endIndex = str.indexOf("</span>", startIndex);
+                str = str.substring(startIndex, endIndex);
+                hisRate = Double.parseDouble(str);
+                hisRateTime = new Date().getTime();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return hisRate;
+    }
+
+    /**
+     * 获取白银行情
+     * @return
+     */
+    public List<Quot> getQuot() {
         List<Quot> quots = new ArrayList<>();
         try {
+            String url = "https://api.jijinhao.com/realtime/quotejs.htm?codes=JO_9754%2CJO_92232&currentPage=1&pageSize=2&_=";
+            HttpsClientUtil https = new HttpsClientUtil();
+            Map<String, String> header = new HashMap<>();
+            header.put("Referer", "https://www.cngold.org/img_date/livesilvercn_rmb.html");
+            https.setBaseheader(header);
+            String str = https.doGet(url + new Date().getTime(), false);
             System.out.println(str);
             str = str.replace("var quot_str = [", "");
             str = str.substring(0, str.length() - 1);
@@ -107,6 +158,9 @@ public class FlyFly extends JFrame {
         return quots;
     }
 
+    /**
+     * 行情
+     */
     static class Quot {
         /**
          * 合约代码

@@ -16,6 +16,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -88,7 +89,7 @@ public class HttpsClientUtil {
         	BasicCookieStore cookieStore = new BasicCookieStore();
 
             //创建自定义的httpclient对象
-        	client = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+            client = getHttpClient().setDefaultCookieStore(cookieStore).build();
 
             //创建get方式请求对象
             httpGet = new HttpGet(url);
@@ -142,7 +143,7 @@ public class HttpsClientUtil {
         	BasicCookieStore cookieStore = new BasicCookieStore();
 
             //创建自定义的httpclient对象
-        	client = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+            client = getHttpClient().setDefaultCookieStore(cookieStore).build();
 
             //创建get方式请求对象
             httpPost = new HttpPost(url);
@@ -300,7 +301,7 @@ public class HttpsClientUtil {
     /**
      * 生成 Http 客户端
      */
-    public CloseableHttpClient getHttpClient(){
+    public HttpClientBuilder getHttpClient(){
         SSLContext sslcontext = createIgnoreVerifySSL();
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
@@ -309,13 +310,13 @@ public class HttpsClientUtil {
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
 
         //创建自定义的httpclient对象
-        CloseableHttpClient client;
+        HttpClientBuilder client;
         if(isProxy) {
             HttpHost proxy = new HttpHost(proxyIp, proxyPort);
             DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-            client = HttpClients.custom().setRoutePlanner(routePlanner).setConnectionManager(connManager).build();
+            client = HttpClients.custom().setRoutePlanner(routePlanner).setConnectionManager(connManager);
         } else {
-            client = HttpClients.custom().setConnectionManager(connManager).build();
+            client = HttpClients.custom().setConnectionManager(connManager);
         }
 
         return client;
