@@ -156,11 +156,21 @@ public class DateUtils {
 
 	/**
 	 * 用默认的日期时间格式，格式化一个Date对象
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
 	public static String formatTime(Date date) {
+		return date == null ? "" : DEFAULT_DATETIME_FORMATER.format(date);
+	}
+
+	/**
+	 * 用默认的日期时间格式，格式化一个Date对象
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static String formatTime(Long date) {
 		return date == null ? "" : DEFAULT_DATETIME_FORMATER.format(date);
 	}
 

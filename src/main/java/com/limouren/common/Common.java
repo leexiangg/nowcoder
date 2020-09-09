@@ -334,6 +334,50 @@ public class Common {
         return list;
     }
 
+    /**
+     * 辗转相除法：最大公约数
+     * @param a
+     * @param b
+     * @return
+     */
+    public static int divisor(int a, int b) {
+        int tmp = a;
+        while((tmp = a % b) > 0) {
+            a = b;
+            b = tmp;
+        }
+        return b;
+    }
+
+    /**
+     * 穷举法：最大公约数
+     * @param a
+     * @param b
+     * @return
+     */
+    public static int divisor2(int a, int b) {
+        for (int i = Math.min(a, b); i >= 2; i--) {
+            if(a % i == 0 && b % i == 0) {
+                return i;
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * 相减法：最大公约数
+     * @param a
+     * @param b
+     * @return
+     */
+    public static int divisor3(int a, int b) {
+        while(a != b) {
+            if(a > b) a -= b;
+            else b -= a;
+        }
+        return a;
+    }
+
     public static void main(String[] args) {
         System.out.println(Arrays.deepToString(combination(new int[]{0, 1, 2, 3}, 2)));
     }

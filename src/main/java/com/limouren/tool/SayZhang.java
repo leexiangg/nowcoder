@@ -1,5 +1,6 @@
 package com.limouren.tool;
 
+import com.limouren.common.DateUtils;
 import com.limouren.common.HttpProxy;
 import com.limouren.common.HttpsClientUtil;
 
@@ -38,11 +39,13 @@ public class SayZhang extends JFrame {
     }
 
     /**
-     * https://mingjia.cngold.org/expert/1868756/sayIndex.htm
+     * 专家列表：https://mingjia.cngold.org/expert/sy/yw_dj_0.htm
+     * 吴德洲（张雪竹）：https://mingjia.cngold.org/expert/1868756/sayIndex.htm
+     * 夏小利（TD酒哥）：https://mingjia.cngold.org/expert/2104538/sayIndex.htm
      */
     public void setText() {
         // 只取最新得一条
-        String url = "https://quanzi.cngold.org/say/userLine/1868756/1/1/?&_=";
+        String url = "https://quanzi.cngold.org/say/userLine/2104538/1/1/?&_=";
         while (true) {
             HttpsClientUtil https = new HttpsClientUtil();
             try {
@@ -60,25 +63,33 @@ public class SayZhang extends JFrame {
 //                    else
 //                        break;
                 } while (result == null || result.length() <= 0);
-                result = result.substring(result.indexOf("\"content\":\"") + 11);
-                result = result.substring(0, result.indexOf("\",\"pictures\":"));
                 System.out.println(result);
-                if(!result.equals(top)) {
-                    if(result.indexOf("做多") > 0) {
+                // 说说
+                String content = result.substring(result.indexOf("\"content\":\"") + 11);
+                content = content.substring(0, content.indexOf("\",\"pictures\":"));
+                // 时间
+                String createdAt = result.substring(result.indexOf("\"createdAt\":") + 12);
+                System.out.println(createdAt);
+                createdAt = createdAt.substring(0, createdAt.indexOf(",\"updatedAt\":"));
+                System.out.println(createdAt);
+                String showText = DateUtils.formatTime(Long.parseLong(createdAt)) + "    " + content.replace("\\n", "\n");
+                System.out.println(showText);
+                if(!showText.equals(top)) {
+                    if(showText.indexOf("做多") > 0) {
                         jltd.setForeground(Color.RED);
-                        top = result;
+                        top = showText;
                     } else if(result.indexOf("做空") > 0) {
                         jltd.setForeground(Color.GREEN);
-                        top = result;
+                        top = showText;
                     } else {
                         jltd.setForeground(Color.BLUE);
-                        top = result;
+                        top = showText;
                     }
                 } else {
                     jltd.setForeground(Color.BLACK);
                 }
-                jltd.setText(result);
-                Thread.sleep(180000);
+                jltd.setText(showText);
+                Thread.sleep(600000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
