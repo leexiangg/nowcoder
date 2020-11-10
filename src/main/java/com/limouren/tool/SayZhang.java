@@ -57,7 +57,7 @@ public class SayZhang extends JFrame {
                 do {
                     String ipPort = HttpProxy.getRandom();
                     String[] proxyIpPort = ipPort.split(":");
-                    https.setProxy(true, proxyIpPort[0], Integer.parseInt(proxyIpPort[1]));
+                    https.setProxy(false, proxyIpPort[0], Integer.parseInt(proxyIpPort[1]));
                     result = https.doGet(url + new Date().getTime(), false);
 //                        HttpProxy.rmProxy(ipPort);
 //                    else
