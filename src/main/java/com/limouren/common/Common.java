@@ -36,6 +36,22 @@ public class Common {
      * 打印数组
      * @param array
      */
+    public static void printArray(boolean[][] array) {
+        if(array != null)
+            Arrays.stream(array).forEach(t -> {
+                System.out.print("[");
+                if(t != null)
+                    for (boolean s : t) {
+                        System.out.print(s + ",");
+                    }
+                System.out.println("]");
+            });
+    }
+
+    /**
+     * 打印数组
+     * @param array
+     */
     public static void printArray(long[][] array) {
         Arrays.stream(array).forEach(t -> {
             Arrays.stream(t).forEach(s -> System.out.print(s + "  "));
@@ -73,7 +89,12 @@ public class Common {
      * @return
      */
     public static int C(int n, int r) {
-        return A(n, r) / F(r);
+        int tmp = 1;
+        for (int i = 0; i < (Math.min((n - r), r)); i++) {
+            tmp = tmp * ((n - i) / (i + 1));
+        }
+        return tmp;
+//        return A(n, r) / F(r);
     }
 
     /**
@@ -82,7 +103,12 @@ public class Common {
      * @return
      */
     public static int F(int n) {
-        return A(n, n);
+        int tmp = 1;
+        for (int i = 0; i < n; i++) {
+            tmp = tmp * (n - i);
+        }
+        return tmp;
+//        return A(n, n);
     }
 
     /**
@@ -376,10 +402,6 @@ public class Common {
             else b -= a;
         }
         return a;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(Arrays.deepToString(combination(new int[]{0, 1, 2, 3}, 2)));
     }
 
 }
